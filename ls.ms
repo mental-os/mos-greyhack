@@ -1,20 +1,28 @@
 //command: ls
+//enchanced by @mental.os
+//version 1.0
 
 computer = get_shell.host_computer
 folderPath = current_path
 if params and params[params.len - 1].indexOf("-") == null then
 	folderPath = params[params.len - 1]
 end if
-	
+
+introText = "\n<color=#FE5000>" + active_user() + "</color> running <color=#FE5000>Echanced LS 1.0</color>\n"
+
+string.color = function(hex)
+	return "<color=" + hex + ">" + self + "</color>"
+end function
+
 folder = computer.File(folderPath)
 if folder == null then
-	print("\n<color=#FE5000>" + active_user() + "</color> running <color=#FE5000>Echanced LS</color>\nNo such file or directory\n")
+	print(introText + "No such file or directory\n")
 else
 	if not folder.has_permission("r") then
-		print("\n<color=#FE5000>" + active_user() + "</color> running <color=#FE5000>Echanced LS</color>\n<color=red>Permission denied</color> for " + active_user() + " \n")
+		print(introText + "<color=red>Permission denied</color> for " + active_user() + " \n")
 	else
 		subFiles = folder.get_folders + folder.get_files
-		output = ""
+		output = "- NAME TYPE PERMS OWNER GROUP SIZE"
 		type = ""
 		count = 0
 		for subFile in subFiles
@@ -32,9 +40,9 @@ else
 			if output.len > 0 then 
 				output = output + "\n"
 			end if
-			output = output + ">> " + nameFile + " " + type + " " + permission + " " + owner + " " + group + " " + size
+			output = output + count + ". " + nameFile + " " + type + " " + permission + " " + owner + " " + group + " " + size
 		end for
-		print("\n<color=#FE5000>" + active_user() + "</color> running <color=#FE5000>Echanced LS</color>\n<color=white>" + count + " results</color> as content of: <color=white>" + folderPath + "</color>\n")
+		print(introText + "<color=white>" + count + " results</color> as content of <color=white>" + folderPath + "</color>\n")
 		print(format_columns(output)+"\n")
 	end if
 end if
